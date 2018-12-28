@@ -33,3 +33,6 @@ X_test = sc.transform(X_test)
 
 
 classifier = Sequential()
+
+classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
