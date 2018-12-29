@@ -7,6 +7,8 @@ from sklearn.preprocessing import StandardScaler
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import cross_val_score
 
 
 dataset = pd.read_csv('Churn_Modelling.csv')
@@ -32,25 +34,34 @@ X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
 
-classifier = Sequential()
+# classifier = Sequential()
 
-classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
-classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
-classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+# classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+# classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+# classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
 
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
+# classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+# classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
 
-y_pred = classifier.predict(X_test)
-y_pred = (y_pred > 0.5)
+# y_pred = classifier.predict(X_test)
+# y_pred = (y_pred > 0.5)
 
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y_test, y_pred)
+# from sklearn.metrics import confusion_matrix
+# cm = confusion_matrix(y_test, y_pred)
 
-accuracy = ((cm[0][0] + cm[1][1])/len(y_test))*100
+# accuracy = ((cm[0][0] + cm[1][1])/len(y_test))*100
 
-#new pred
-new_prediction = classifier.predict(sc.transform(np.array([[0.0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
-new_prediction = (new_prediction > 0.5)
+# #new pred
+# new_prediction = classifier.predict(sc.transform(np.array([[0.0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
+# new_prediction = (new_prediction > 0.5
 
+def build_classifier():
+    classifier = Sequential()
+    classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+    classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+    classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+    return classifier
+
+classifier = KerasClassifier()
 
