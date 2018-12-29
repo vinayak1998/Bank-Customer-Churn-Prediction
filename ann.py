@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import cross_val_score
+from keras.layers import Dropout
 
 
 dataset = pd.read_csv('Churn_Modelling.csv')
@@ -37,7 +38,9 @@ X_test = sc.transform(X_test)
 # classifier = Sequential()
 
 # classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+#classifier.add(Dropout(p = 0.1))
 # classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+#classifier.add(Dropout(p = 0.1))
 # classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
 
 # classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
@@ -65,5 +68,6 @@ def build_classifier():
 
 classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100)
 accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10, n_jobs = -1)
-
+mean = accuracies.mean()
+variance = accuracies.std()
 
