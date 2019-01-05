@@ -10,6 +10,7 @@ from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import cross_val_score
 from keras.layers import Dropout
+from sklearn.model_selection import GridSearchCV
 
 
 dataset = pd.read_csv('Churn_Modelling.csv')
@@ -34,6 +35,8 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
+#-------------------------------------------
+
 
 # classifier = Sequential()
 
@@ -56,18 +59,37 @@ X_test = sc.transform(X_test)
 
 # #new pred
 # new_prediction = classifier.predict(sc.transform(np.array([[0.0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
-# new_prediction = (new_prediction > 0.5
+# new_prediction = (new_prediction > 0.5)
 
-def build_classifier():
+#-------------------------------------------
+
+# def build_classifier():
+#     classifier = Sequential()
+#     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+#     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+#     classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+#     classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+#     return classifier
+
+# classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100)
+# accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10, n_jobs = -1)
+# mean = accuracies.mean()
+# variance = accuracies.std()
+
+#-------------------------------------------
+
+def build_classifier(optimizer):
     classifier = Sequential()
     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
     classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
-    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+    classifier.compile(optimizer = optimizer, loss = 'binary_crossentropy', metrics = ['accuracy'])
     return classifier
+    
+classifier = KerasClassifier(build_fn = build_classifier)
+parameters = {'batch_size': [25, 32],
+              'epochs': [100, 500],
+              'optimizer': ['adam', 'rmsprop']}
 
-classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100)
-accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10, n_jobs = -1)
-mean = accuracies.mean()
-variance = accuracies.std()
+
 
